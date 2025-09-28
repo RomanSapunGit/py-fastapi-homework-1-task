@@ -20,7 +20,7 @@ async def get_movies_list(page: int = Query(1, ge=1), per_page: int = Query(10, 
     total_pages = ceil(total_items_count / per_page)
 
     if page > total_pages:
-       raise HTTPException(status_code=404, detail="No movies found.")
+        raise HTTPException(status_code=404, detail="No movies found.")
 
     prev_page = f"/theater/movies/?page={page - 1}&per_page={per_page}" if page > 1 else None
     next_page = f"/theater/movies/?page={page + 1}&per_page={per_page}" if page < total_pages else None
