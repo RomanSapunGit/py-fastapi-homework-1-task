@@ -13,17 +13,17 @@ router = APIRouter()
 
 # Write your code here
 @router.get("/movies/", response_model=MovieListResponseSchema)
-async def get_movies_list(page: int = Query(1, ge=1), per_page: int = Query(10, ge=1),
+async def get_movies_list(page: int = Query(1, ge=1), per_page: int = Query(10, ge=1, le=20),
                           db: AsyncSession = Depends(get_db)):
     total_items = await db.execute(select(func.count()).select_from(MovieModel))
     total_items_count = total_items.scalar()
     total_pages = ceil(total_items_count / per_page)
 
     if page > total_pages:
-        HTTPException(status_code=404, detail="No movies found.")
+       raise HTTPException(status_code=404, detail="No movies found.")
 
-    prev_page = f"/movies?page={page - 1}&per_page={per_page}" if page > 1 else None
-    next_page = f"/movies?page={page + 1}&per_page={per_page}" if page < total_pages else None
+    prev_page = f"/theater/movies/?page={page - 1}&per_page={per_page}" if page > 1 else None
+    next_page = f"/theater/movies/?page={page + 1}&per_page={per_page}" if page < total_pages else None
 
     start_item_number = (page - 1) * per_page
     result_query = await db.execute(select(MovieModel).slice(start_item_number, start_item_number + per_page))
