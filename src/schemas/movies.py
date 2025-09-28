@@ -17,7 +17,7 @@ class MovieDetailResponseSchema(BaseModel):
     status: str
     orig_lang: str
     budget: int
-    revenue: int
+    revenue: float
     country: str
 
     model_config = {
